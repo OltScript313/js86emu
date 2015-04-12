@@ -4054,7 +4054,7 @@ function(
         /**
          * Return a setting
          *
-         * Used mostly for testing
+         * Used for testing
          *
          * @param key
          * @returns {*}

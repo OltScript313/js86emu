@@ -7,9 +7,10 @@
 require.config({
     baseUrl: "build/js",
     paths: {
-        'jquery'     : '../lib/jquery-1.11.0',
-        'backbone'   : '../lib/backbone-1.1.2',
-        'underscore' : '../lib/underscore-1.6.0'
+        'jquery'      : '../lib/jquery-1.11.0',
+        'backbone'    : '../lib/backbone-1.1.2',
+        'underscore'  : '../lib/underscore-1.6.0',
+        'es6-promise' : '../lib/es6-promise-2.0.1'
     },
     shim: {
         underscore: {
@@ -34,5 +35,9 @@ function (
     Backbone,
     GUI)
 {
-    GUI.init();
+    // Polyfill the ES6 promise
+    requirejs(['es6-promise'], function (es6_promise) {
+        es6_promise.polyfill();
+        GUI.init();
+    });
 });

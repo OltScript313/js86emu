@@ -1,13 +1,20 @@
 var path = require('path');
 var requirejs = require('requirejs');
-var assert = require("assert")
 var should = require('should');
+var sinon = require('sinon');
 var u = require('./utils');
+
+require('es6-promise').polyfill();
 
 // Minimal configuration of require.js for this test run
 requirejs.config({
     baseUrl: path.normalize(__dirname + "/../src/js"),
     nodeRequire: require,
+    paths: {
+        'jquery'     : '../js/lib/jquery-1.11.0',
+        'underscore' : '../lib/underscore-1.6.0',
+        'promise'    : '../js/lib/es6-promise-2.0.1.js'
+    }
 });
 
 
@@ -16,16 +23,41 @@ requirejs.config({
  */
 describe('Emu', function () {
 
-    var mockEmu;
+    var mockEmu, jQuery;
 
-    before(function(){
-        // TODO: Load the Emu module
+    before("Emulator Setup", function(done){
+        // Load the Emu module using require.js
+        requirejs([
+            'jquery',
+            'underscore',
+            'emu/emu'
+        ], function (
+            _jQuery,
+            _,
+            _File
+        ) {
+            jQuery = _jQuery;
+            mockEmu = _File;
+            done();
+        });
     });
 
-    it.skip('should run pre-boot steps', function() {
-        // TODO: Write test
-        false.should.be.true;
-        // mockEmu.loadBiosRom();
+    it('should run pre-boot steps', function() {
+        var Cpu = mockEmu.t_getCpu();
+
+        var mock = sinon.mock(Cpu)
+            .expects("clearMemory").once();
+
+        console.log("HERE");
+        var p = mockEmu.pre_boot();
+
+        p.then(function(){
+            console.log("IN CALLBACK")
+            mock.verify();
+            done();
+        }, function(e){
+            console.log(e);
+        });
     });
 
     it.skip('should boot CPU', function() {

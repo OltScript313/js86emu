@@ -31,7 +31,7 @@ function(
             {
                 // Configure the CPU and load ROMs
                 Cpu.configure()
-                    .then(function(){return Cpu.clearMemory();}, _error)
+                    //.then(function(){return Cpu.clearMemory();}, _error)
                     .then(function(){return Cpu.loadBiosRom();}, _error)
                     .then(function(){return Cpu.loadVideoRom();}, _error)
                     .then(function(){resolve();}, _error);
@@ -103,6 +103,17 @@ function(
         isDebug : function ()
         {
             return Cpu.isDebug();
+        },
+
+        /**
+         * Return the local handle on the CPU object
+         *
+         * Used for testing
+         *
+         * @returns Cpu
+         */
+        t_getCpu : function () {
+            return Cpu;
         }
     };
 
